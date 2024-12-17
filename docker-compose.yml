@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Order Service
+  order-service:
+    build:
+      context: ./order-service
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./order-service/.env
+    depends_on:
+      - mongo-order
+
+  # Inventory Service
+  inventory-service:
+    build:
+      context: ./inventory-service
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./inventory-service/.env
+    depends_on:
+      - mongo-inventory
+
+  # MongoDB for Order Service
+  mongo-order:
+    image: mongo:6
+    container_name: mongo-order
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-order-data:/data/db
+
+  # MongoDB for Inventory Service
+  mongo-inventory:
+    image: mongo:6
+    container_name: mongo-inventory
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-inventory-data:/data/db
+
+volumes:
+  mongo-order-data:
+  mongo-inventory-data:
